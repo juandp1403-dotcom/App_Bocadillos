@@ -7,12 +7,22 @@ import 'package:flutter/foundation.dart';
 class AppConfig {
   static const String _urlDefinida = String.fromEnvironment('API_BASE_URL');
 
-  /// URL base de la API.
+  /// Quita espacios y la barra final para evitar doble barra en las rutas
+  /// (`http://host:8000/` + `/api/...` no debe producir `//api/...`).
+  static String normalizar(String url) {
+    var limpio = url.trim();
+    while (limpio.endsWith('/')) {
+      limpio = limpio.substring(0, limpio.length - 1);
+    }
+    return limpio;
+  }
+
+  /// URL por defecto de cada plataforma cuando no se define API_BASE_URL.
   ///
   /// - Android (emulador): 10.0.2.2 equivale al localhost de la maquina.
-  /// - Windows / Web / iOS / Android (fisico con IP local): localhost.
-  static String get apiBaseUrl {
-    if (_urlDefinida.isNotEmpty) return _urlDefinida;
+  /// - Android (fisico) / Web / Windows: localhost; en el celular fisico se
+  ///   debe pasar `--dart-define=API_BASE_URL=http://IP-DE-LA-PC:8000`
+  static String _porDefecto() {
     if (kIsWeb) return 'http://localhost:8000';
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -20,5 +30,11 @@ class AppConfig {
       default:
         return 'http://localhost:8000';
     }
+  }
+
+  /// URL base de la API (sin barra final).
+  static String get apiBaseUrl {
+    if (_urlDefinida.isNotEmpty) return normalizar(_urlDefinida);
+    return _porDefecto();
   }
 }

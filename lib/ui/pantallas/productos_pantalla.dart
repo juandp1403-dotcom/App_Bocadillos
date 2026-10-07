@@ -181,7 +181,9 @@ class _ProductosPantallaState extends State<ProductosPantalla> {
                             [
                               if ((producto.tipo ?? '').isNotEmpty)
                                 producto.tipo,
-                              'Proveedor #${producto.idProveedor ?? '-'}',
+                              producto.idProveedor == null
+                                  ? 'Sin proveedor'
+                                  : 'Proveedor #${producto.idProveedor}',
                             ].join('  |  '),
                           ),
                           trailing: Row(

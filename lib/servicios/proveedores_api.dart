@@ -46,8 +46,9 @@ class ProveedoresApi {
       final res = await listar(pagina: pagina, tamano: tamano);
       todos.addAll(res.items);
       paginas = res.paginas;
+      if (res.items.isEmpty) break;
       pagina++;
-    } while (pagina <= paginas && pagina <= 20);
+    } while (pagina <= paginas && pagina <= 100);
     return todos;
   }
 }

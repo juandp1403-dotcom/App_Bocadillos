@@ -80,13 +80,18 @@ class _ProductoFormularioState extends State<ProductoFormulario> {
   }
 
   Future<void> _guardar() async {
+    // Evita enviar dos veces la misma peticion.
+    if (_guardando) return;
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _guardando = true);
 
+    final precio = _parsearPrecio(_precio.text);
     final cuerpo = <String, dynamic>{
       'nombreProducto': _nombre.text.trim(),
       'tipo': _tipo.text.trim().isEmpty ? null : _tipo.text.trim(),
-      'precio': _parsearPrecio(_precio.text),
+      // Se envia como texto con dos decimales para que el backend reciba un
+      // Decimal exacto (evita artefactos de punto flotante).
+      'precio': precio?.toStringAsFixed(2),
       'stock': int.tryParse(_stock.text.trim()) ?? 0,
       'idProveedor': _idProveedor,
     };
@@ -106,6 +111,35 @@ class _ProductoFormularioState extends State<ProductoFormulario> {
     } finally {
       if (mounted) setState(() => _guardando = false);
     }
+  }
+
+  /// Opciones del selector de proveedor. Si el proveedor actual no esta en la
+  /// lista cargada se agrega una entrada para que el dropdown conserve el valor
+  /// (Flutter exige que el valor elegido exista entre los items).
+  List<DropdownMenuItem<int?>> _itemsProveedor() {
+    final items = <DropdownMenuItem<int?>>[
+      const DropdownMenuItem<int?>(value: null, child: Text('Sin proveedor')),
+    ];
+    final List<Proveedor> restantes = [..._proveedores];
+    final idActual = _idProveedor;
+    if (idActual != null && !restantes.any((p) => p.idProveedor == idActual)) {
+      restantes.insert(
+        0,
+        Proveedor(
+          idProveedor: idActual,
+          nombreProveedor: 'Proveedor #$idActual',
+        ),
+      );
+    }
+    for (final proveedor in restantes) {
+      items.add(
+        DropdownMenuItem<int?>(
+          value: proveedor.idProveedor,
+          child: Text(proveedor.nombreProveedor),
+        ),
+      );
+    }
+    return items;
   }
 
   @override
@@ -204,17 +238,7 @@ class _ProductoFormularioState extends State<ProductoFormulario> {
                         labelText: 'Proveedor',
                         prefixIcon: Icon(Icons.local_shipping_outlined),
                       ),
-                      items: [
-                        const DropdownMenuItem<int?>(
-                          value: null,
-                          child: Text('Sin proveedor'),
-                        ),
-                        for (final proveedor in _proveedores)
-                          DropdownMenuItem<int?>(
-                            value: proveedor.idProveedor,
-                            child: Text(proveedor.nombreProveedor),
-                          ),
-                      ],
+                      items: _itemsProveedor(),
                       onChanged: (valor) =>
                           setState(() => _idProveedor = valor),
                     ),

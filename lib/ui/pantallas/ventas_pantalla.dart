@@ -65,9 +65,9 @@ class _VentasPantallaState extends State<VentasPantalla> {
     return _items
         .where(
           (v) =>
-              '$v'.contains(texto) ||
               '${v.idVenta}'.contains(texto) ||
-              '${v.idCliente}'.contains(texto),
+              '${v.idCliente}'.contains(texto) ||
+              '${v.total}'.contains(texto),
         )
         .toList();
   }

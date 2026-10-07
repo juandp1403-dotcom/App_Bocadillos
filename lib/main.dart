@@ -13,14 +13,15 @@ Future<void> main() async {
   await initializeDateFormatting('es');
 
   final sesion = Sesion();
-  await sesion.restaurar();
-
   runApp(
     ChangeNotifierProvider<Sesion>.value(
       value: sesion,
       child: const AppBocadillos(),
     ),
   );
+  // Se restaura el token despues de arrancar la interfaz para no bloquear el
+  // primer pintado (si el backend no responde la app igual carga el login).
+  await sesion.restaurar();
 }
 
 class AppBocadillos extends StatelessWidget {

@@ -1,4 +1,4 @@
-/// Modelos de datos que devuelve la API (JSON en camelCase).
+﻿/// Modelos de datos que devuelve la API (JSON en camelCase).
 library;
 
 double _aDouble(dynamic valor) {
@@ -14,6 +14,12 @@ int _aInt(dynamic valor) {
 
 Map<String, dynamic> _mapa(dynamic valor) {
   return valor is Map<String, dynamic> ? valor : <String, dynamic>{};
+}
+
+String? _aTexto(dynamic valor) {
+  if (valor == null) return null;
+  final texto = '$valor';
+  return texto.isEmpty ? null : texto;
 }
 
 class Pagina<T> {
@@ -63,11 +69,11 @@ class Usuario {
     final mapa = _mapa(json);
     return Usuario(
       idUsuario: _aInt(mapa['idUsuario']),
-      username: '${mapa['username'] ?? ''}',
-      email: '${mapa['email'] ?? ''}',
-      nombre: '${mapa['nombre'] ?? ''}',
-      rol: '${mapa['rol'] ?? ''}',
-      activo: mapa['activo'] as bool? ?? true,
+      username: _aTexto(mapa['username']) ?? '',
+      email: _aTexto(mapa['email']) ?? '',
+      nombre: _aTexto(mapa['nombre']) ?? '',
+      rol: _aTexto(mapa['rol']) ?? '',
+      activo: mapa['activo'] != false,
     );
   }
 
@@ -92,10 +98,10 @@ class Cliente {
     final mapa = _mapa(json);
     return Cliente(
       idCliente: _aInt(mapa['idCliente']),
-      nombreCliente: '${mapa['nombreCliente'] ?? ''}',
-      telefono: mapa['telefono'] as String?,
-      correo: mapa['correo'] as String?,
-      direccion: mapa['direccion'] as String?,
+      nombreCliente: _aTexto(mapa['nombreCliente']) ?? '',
+      telefono: _aTexto(mapa['telefono']),
+      correo: _aTexto(mapa['correo']),
+      direccion: _aTexto(mapa['direccion']),
     );
   }
 
@@ -119,10 +125,10 @@ class Proveedor {
     final mapa = _mapa(json);
     return Proveedor(
       idProveedor: _aInt(mapa['idProveedor']),
-      nombreProveedor: '${mapa['nombreProveedor'] ?? ''}',
-      telefonoProveedor: mapa['telefonoProveedor'] as String?,
-      correoProveedor: mapa['correoProveedor'] as String?,
-      direccionProveedor: mapa['direccionProveedor'] as String?,
+      nombreProveedor: _aTexto(mapa['nombreProveedor']) ?? '',
+      telefonoProveedor: _aTexto(mapa['telefonoProveedor']),
+      correoProveedor: _aTexto(mapa['correoProveedor']),
+      direccionProveedor: _aTexto(mapa['direccionProveedor']),
     );
   }
 
@@ -147,8 +153,8 @@ class Producto {
     final mapa = _mapa(json);
     return Producto(
       idProducto: _aInt(mapa['idProducto']),
-      nombreProducto: '${mapa['nombreProducto'] ?? ''}',
-      tipo: mapa['tipo'] as String?,
+      nombreProducto: _aTexto(mapa['nombreProducto']) ?? '',
+      tipo: _aTexto(mapa['tipo']),
       precio: _aDouble(mapa['precio']),
       stock: _aInt(mapa['stock']),
       idProveedor: mapa['idProveedor'] == null

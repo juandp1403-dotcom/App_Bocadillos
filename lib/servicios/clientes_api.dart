@@ -34,4 +34,19 @@ class ClientesApi {
   Future<void> eliminar(int id) async {
     await api.delete('/api/clientes/$id');
   }
+
+  /// Carga todas las paginas (util para los selectores).
+  Future<List<Cliente>> listarTodos({int tamano = 100}) async {
+    final List<Cliente> todos = [];
+    var pagina = 1;
+    var paginas = 1;
+    do {
+      final res = await listar(pagina: pagina, tamano: tamano);
+      todos.addAll(res.items);
+      paginas = res.paginas;
+      if (res.items.isEmpty) break;
+      pagina++;
+    } while (pagina <= paginas && pagina <= 100);
+    return todos;
+  }
 }

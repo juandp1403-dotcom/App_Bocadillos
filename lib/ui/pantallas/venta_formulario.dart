@@ -37,6 +37,7 @@ class _VentaFormularioState extends State<VentaFormulario> {
   final List<_ItemCarrito> _carrito = [];
 
   int? _idCliente;
+  Cliente? _clienteElegido;
   bool _cargando = true;
   bool _guardando = false;
   String? _error;
@@ -61,8 +62,8 @@ class _VentaFormularioState extends State<VentaFormulario> {
     });
     try {
       final sesion = context.read<Sesion>();
-      final clientes = await _todosLosClientes(sesion);
-      final productos = await _todosLosProductos(sesion);
+      final clientes = await sesion.clientes.listarTodos();
+      final productos = await sesion.productos.listarTodos();
       if (!mounted) return;
       setState(() {
         _clientes = clientes;
@@ -76,42 +77,27 @@ class _VentaFormularioState extends State<VentaFormulario> {
     }
   }
 
-  Future<List<Cliente>> _todosLosClientes(Sesion sesion) async {
-    final List<Cliente> todos = [];
-    var pagina = 1;
-    var paginas = 1;
-    do {
-      final res = await sesion.clientes.listar(pagina: pagina, tamano: 100);
-      todos.addAll(res.items);
-      paginas = res.paginas;
-      pagina++;
-    } while (pagina <= paginas && pagina <= 20);
-    return todos;
-  }
-
-  Future<List<Producto>> _todosLosProductos(Sesion sesion) async {
-    final List<Producto> todos = [];
-    var pagina = 1;
-    var paginas = 1;
-    do {
-      final res = await sesion.productos.listar(pagina: pagina, tamano: 100);
-      todos.addAll(res.items);
-      paginas = res.paginas;
-      pagina++;
-    } while (pagina <= paginas && pagina <= 20);
-    return todos;
-  }
-
   List<Cliente> get _clientesFiltrados {
     final texto = _busquedaCliente.text.trim().toLowerCase();
-    if (texto.isEmpty) return _clientes;
-    return _clientes
-        .where(
-          (c) =>
-              c.nombreCliente.toLowerCase().contains(texto) ||
-              '${c.idCliente}'.contains(texto),
-        )
-        .toList();
+    final List<Cliente> base;
+    if (texto.isEmpty) {
+      base = _clientes;
+    } else {
+      base = _clientes
+          .where(
+            (c) =>
+                c.nombreCliente.toLowerCase().contains(texto) ||
+                '${c.idCliente}'.contains(texto),
+          )
+          .toList();
+    }
+    // El cliente elegido debe seguir en la lista aunque el filtro lo oculte,
+    // de lo contrario el dropdown pierde su valor.
+    final elegido = _clienteElegido;
+    if (elegido != null && !base.any((c) => c.idCliente == elegido.idCliente)) {
+      return [elegido, ...base];
+    }
+    return base;
   }
 
   List<Producto> get _productosFiltrados {
@@ -141,16 +127,18 @@ class _VentaFormularioState extends State<VentaFormulario> {
       return;
     }
     final existente = _itemDe(producto.idProducto);
+    if (existente != null && existente.cantidad >= producto.stock) {
+      mostrarError(
+        context,
+        'Solo hay ${producto.stock} unidades de ${producto.nombreProducto}.',
+      );
+      return;
+    }
     setState(() {
       if (existente == null) {
         _carrito.add(_ItemCarrito(producto, 1));
-      } else if (existente.cantidad < producto.stock) {
-        existente.cantidad++;
       } else {
-        mostrarError(
-          context,
-          'Solo hay ${producto.stock} unidades de ${producto.nombreProducto}.',
-        );
+        existente.cantidad++;
       }
     });
   }
@@ -177,6 +165,8 @@ class _VentaFormularioState extends State<VentaFormulario> {
   }
 
   Future<void> _registrar() async {
+    // Evita enviar dos veces la misma venta.
+    if (_guardando) return;
     if (_idCliente == null) {
       mostrarError(context, 'Selecciona el cliente de la venta.');
       return;
@@ -263,8 +253,15 @@ class _VentaFormularioState extends State<VentaFormulario> {
                                 ),
                               ),
                           ],
-                          onChanged: (valor) =>
-                              setState(() => _idCliente = valor),
+                          onChanged: (valor) {
+                            setState(() {
+                              _idCliente = valor;
+                              _clienteElegido = null;
+                              for (final c in _clientes) {
+                                if (c.idCliente == valor) _clienteElegido = c;
+                              }
+                            });
+                          },
                           validator: (_) => _idCliente == null
                               ? 'Selecciona un cliente'
                               : null,
@@ -307,8 +304,8 @@ class _VentaFormularioState extends State<VentaFormulario> {
                       const SizedBox(height: 8),
                       if (_productos.isEmpty)
                         const Text('No hay productos registrados.')
-                      else
-                        for (final producto in _productosFiltrados)
+                      else ...[
+                        for (final producto in _productosFiltrados.take(50))
                           ListTile(
                             dense: true,
                             leading: CircleAvatar(
@@ -325,6 +322,17 @@ class _VentaFormularioState extends State<VentaFormulario> {
                               onPressed: () => _agregar(producto),
                             ),
                           ),
+                        if (_productosFiltrados.length > 50)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              'Se muestran los primeros 50 de '
+                              '${_productosFiltrados.length}. '
+                              'Usa la busqueda para encontrar los demas.',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                      ],
                       if (_productosFiltrados.isEmpty && _productos.isNotEmpty)
                         const Padding(
                           padding: EdgeInsets.only(top: 8),

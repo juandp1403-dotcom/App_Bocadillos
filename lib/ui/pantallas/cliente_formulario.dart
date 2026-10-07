@@ -46,6 +46,8 @@ class _ClienteFormularioState extends State<ClienteFormulario> {
   }
 
   Future<void> _guardar() async {
+    // Evita enviar dos veces la misma peticion.
+    if (_guardando) return;
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _guardando = true);
 

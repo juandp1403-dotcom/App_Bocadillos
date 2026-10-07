@@ -22,7 +22,10 @@ class _LoginPantallaState extends State<LoginPantalla> {
   @override
   void initState() {
     super.initState();
-    _error = context.read<Sesion>().avisoSesion;
+    final sesion = context.read<Sesion>();
+    _error = sesion.avisoSesion;
+    // El aviso (sesion expirada, backend caido...) se muestra una sola vez.
+    sesion.avisoSesion = null;
   }
 
   @override
