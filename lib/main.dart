@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'core/sesion.dart';
 import 'rutas/rutas.dart';
+import 'theme/app_theme.dart';
 import 'ui/pantallas/login_pantalla.dart';
 import 'ui/pantallas/shell_pantalla.dart';
 import 'ui/widgets/comunes.dart';
@@ -32,13 +33,7 @@ class AppBocadillos extends StatelessWidget {
     return MaterialApp(
       title: 'Fabrica de Bocadillos',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE65100)),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
-        ),
-      ),
+      theme: AppTheme.light,
       onGenerateRoute: Rutas.generarRuta,
       home: Consumer<Sesion>(
         builder: (context, sesion, _) {

@@ -123,7 +123,7 @@ class _InicioPantallaState extends State<InicioPantalla> {
             ),
           _Tarjeta(
             icono: Icons.warning_amber_outlined,
-            titulo: 'Productos con stock bajo (<= 5)',
+            titulo: 'Productos con stock bajo',
             valor: '${resumen.stockBajo}',
             color: resumen.stockBajo > 0 ? Colors.red : Colors.green,
           ),

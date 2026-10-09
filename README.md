@@ -26,6 +26,9 @@ cd C:\Users\ASUS\Documents\App_Bocadillos
 ### 1. Flutter Web (puerto 5173, obligatorio por CORS)
 
 ```powershell
+$env:PATH += ";C:\Users\ASUS\flutter\bin"
+cd C:\Users\ASUS\Documents\App_Bocadillos
+flutter pub get
 flutter run -d chrome --web-port 5173
 ```
 
@@ -149,7 +152,8 @@ test/
 - JSON camelCase; `Authorization: Bearer <jwt>`; el JWT expira en 30 min →
   cualquier 401 cierra la sesion y limpia el token guardado.
 - Errores: `{"detail", "code", "errors"}`; `422` de validacion de FastAPI
-  llega como lista `[{loc, msg, type}]` y se traduce a mensajes por campo.
+  llega como lista `[{loc, message, type}]` (el backend emite `message`) y se
+  traduce a mensajes por campo.
 - Precios decimales: se aceptan como numero o texto (`"3500.50"`); el
   formulario de producto envia el precio como texto con dos decimales.
 

@@ -139,7 +139,15 @@ class ApiClient {
     final cuerpo = _decodificar(respuesta.bodyBytes);
 
     if (respuesta.statusCode >= 400) {
-      final detalle = _extraerDetalle(cuerpo);
+      // Si el backend responde 5xx sin cuerpo JSON (p. ej. SQLite aun sin
+      // inicializar), se da un mensaje accionable en lugar de un generico.
+      final detalle = cuerpo == null && respuesta.statusCode >= 500
+          ? 'El servidor respondio con un error interno '
+              '(HTTP ${respuesta.statusCode}). Verifica que el backend este '
+              'inicializado y tenga usuarios semilla:\n'
+              '1. alembic upgrade head (crea las tablas)\n'
+              '2. python seed.py (crea los usuarios)'
+          : _extraerDetalle(cuerpo);
       final codigo = _extraerCodigo(cuerpo);
       final errores = cuerpo is Map<String, dynamic> && cuerpo['errors'] is List
           ? cuerpo['errors'] as List<dynamic>
@@ -184,12 +192,15 @@ class ApiClient {
     return 'La solicitud no pudo procesarse.';
   }
 
-  /// Errores de validacion de FastAPI: `[{loc, msg, type}, ...]`.
+  /// Errores de validacion de FastAPI: `[{loc, message, type}, ...]`.
+  /// El backend de este proyecto emite `message`; se acepta también `msg`
+  /// (el formato crudo de FastAPI) por compatibilidad.
   String _detalleDeValidacion(List<dynamic> errores) {
     final mensajes = errores.whereType<Map<String, dynamic>>().map((e) {
       final lugar = e['loc'];
       final campo = lugar is List && lugar.length > 1 ? '${lugar.last}: ' : '';
-      return '$campo${e['msg'] ?? 'valor invalido'}';
+      final detalle = e['message'] ?? e['msg'] ?? 'valor invalido';
+      return '$campo$detalle';
     }).toList();
     if (mensajes.isEmpty) return 'Datos invalidos.';
     return mensajes.join('\n');
