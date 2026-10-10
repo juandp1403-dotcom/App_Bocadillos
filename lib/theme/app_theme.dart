@@ -37,7 +37,7 @@ class AppTheme {
           onSecondary: Colors.white,
           tertiary: AppColors.rosa,
           onTertiary: Colors.white,
-          surface: AppColors.beige,
+          surface: AppColors.crema,
           onSurface: AppColors.cafe,
           onSurfaceVariant: AppColors.cafe.withValues(alpha: 0.72),
           outline: AppColors.cafe.withValues(alpha: 0.55),
@@ -46,12 +46,12 @@ class AppTheme {
           onError: Colors.white,
         );
 
-    final textTheme = GoogleFonts.fredokaTextTheme(base.textTheme)
+    final textTheme = _aplicarFredoka(base.textTheme)
         .apply(bodyColor: AppColors.cafe, displayColor: AppColors.cafe);
 
     return base.copyWith(
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: AppColors.beige,
+      scaffoldBackgroundColor: AppColors.crema,
       textTheme: textTheme,
       appBarTheme: _appBarTheme(),
       cardTheme: _cardTheme(),
@@ -65,9 +65,33 @@ class AppTheme {
     );
   }
 
+  /// Replica el TextTheme con Fredoka en cada estilo, preservando el resto de
+  /// propiedades del estilo original (tamano, peso, color...).
+  static TextTheme _aplicarFredoka(TextTheme base) {
+    TextStyle aplica(TextStyle? estilo) =>
+        GoogleFonts.fredoka(textStyle: estilo);
+    return base.copyWith(
+      displayLarge: aplica(base.displayLarge),
+      displayMedium: aplica(base.displayMedium),
+      displaySmall: aplica(base.displaySmall),
+      headlineLarge: aplica(base.headlineLarge),
+      headlineMedium: aplica(base.headlineMedium),
+      headlineSmall: aplica(base.headlineSmall),
+      titleLarge: aplica(base.titleLarge),
+      titleMedium: aplica(base.titleMedium),
+      titleSmall: aplica(base.titleSmall),
+      bodyLarge: aplica(base.bodyLarge),
+      bodyMedium: aplica(base.bodyMedium),
+      bodySmall: aplica(base.bodySmall),
+      labelLarge: aplica(base.labelLarge),
+      labelMedium: aplica(base.labelMedium),
+      labelSmall: aplica(base.labelSmall),
+    );
+  }
+
   static AppBarTheme _appBarTheme() {
     return AppBarTheme(
-      backgroundColor: AppColors.beige,
+      backgroundColor: AppColors.crema,
       foregroundColor: AppColors.cafe,
       elevation: 0,
       scrolledUnderElevation: 2,
@@ -83,7 +107,7 @@ class AppTheme {
 
   static CardThemeData _cardTheme() {
     return CardThemeData(
-      color: AppColors.beige,
+      color: AppColors.crema,
       surfaceTintColor: Colors.transparent,
       elevation: 3,
       shadowColor: AppColors.cafe.withValues(alpha: 0.25),
@@ -268,7 +292,7 @@ class AppTheme {
 
   static ChipThemeData _chipTheme() {
     return ChipThemeData(
-      backgroundColor: AppColors.beige,
+      backgroundColor: AppColors.crema,
       selectedColor: AppColors.ocre.withValues(alpha: 0.25),
       disabledColor: AppColors.cafe.withValues(alpha: 0.12),
       side: BorderSide(
@@ -294,7 +318,7 @@ class AppTheme {
 
   static BottomNavigationBarThemeData _bottomNavigationBarTheme() {
     return BottomNavigationBarThemeData(
-      backgroundColor: AppColors.beige,
+      backgroundColor: AppColors.crema,
       selectedItemColor: AppColors.rojo,
       unselectedItemColor: AppColors.cafe.withValues(alpha: 0.6),
       selectedIconTheme: IconThemeData(color: AppColors.rojo),
