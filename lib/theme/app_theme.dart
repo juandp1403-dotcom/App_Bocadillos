@@ -10,12 +10,7 @@ const double _radioCampo = 28;
 const double _radioChip = 24;
 const double _radioFab = 32;
 
-/// Tema global Y2K nostalgico de la fabrica.
-///
-/// - Tipografia redondeada Fredoka en todo el [TextTheme].
-/// - Beige como fondo, cafe para el texto y contornos.
-/// - Rojo primario para botones y acentos; ocre para bordes y destellos.
-/// - Rosa chicle y azul pastel solo como acentos secundarios del esquema.
+/// Tema global Neo-Memphis de la fabrica.
 class AppTheme {
   AppTheme._();
 
@@ -23,7 +18,7 @@ class AppTheme {
     final base = ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      fontFamily: GoogleFonts.fredoka().fontFamily,
+      fontFamily: GoogleFonts.outfit().fontFamily,
     );
 
     final colorScheme =
@@ -33,15 +28,15 @@ class AppTheme {
         ).copyWith(
           primary: AppColors.rojo,
           onPrimary: Colors.white,
-          secondary: AppColors.ocre,
+          secondary: AppColors.rosa,
           onSecondary: Colors.white,
-          tertiary: AppColors.rosa,
+          tertiary: AppColors.verde,
           onTertiary: Colors.white,
           surface: AppColors.crema,
           onSurface: AppColors.cafe,
           onSurfaceVariant: AppColors.cafe.withValues(alpha: 0.72),
-          outline: AppColors.cafe.withValues(alpha: 0.55),
-          outlineVariant: AppColors.ocre.withValues(alpha: 0.6),
+          outline: AppColors.cafe,
+          outlineVariant: AppColors.ocre,
           error: AppColors.rojo,
           onError: Colors.white,
         );
@@ -65,27 +60,19 @@ class AppTheme {
     );
   }
 
-  /// Replica el TextTheme con Fredoka en cada estilo, preservando el resto de
-  /// propiedades del estilo original (tamano, peso, color...).
+  /// Usa Rubik para titulares y Outfit para lectura y formularios.
   static TextTheme _aplicarFredoka(TextTheme base) {
-    TextStyle aplica(TextStyle? estilo) =>
-        GoogleFonts.fredoka(textStyle: estilo);
+    TextStyle titular(TextStyle? estilo) => GoogleFonts.rubik(textStyle: estilo);
+    TextStyle cuerpo(TextStyle? estilo) => GoogleFonts.outfit(textStyle: estilo);
     return base.copyWith(
-      displayLarge: aplica(base.displayLarge),
-      displayMedium: aplica(base.displayMedium),
-      displaySmall: aplica(base.displaySmall),
-      headlineLarge: aplica(base.headlineLarge),
-      headlineMedium: aplica(base.headlineMedium),
-      headlineSmall: aplica(base.headlineSmall),
-      titleLarge: aplica(base.titleLarge),
-      titleMedium: aplica(base.titleMedium),
-      titleSmall: aplica(base.titleSmall),
-      bodyLarge: aplica(base.bodyLarge),
-      bodyMedium: aplica(base.bodyMedium),
-      bodySmall: aplica(base.bodySmall),
-      labelLarge: aplica(base.labelLarge),
-      labelMedium: aplica(base.labelMedium),
-      labelSmall: aplica(base.labelSmall),
+      displayLarge: titular(base.displayLarge), displayMedium: titular(base.displayMedium),
+      displaySmall: titular(base.displaySmall), headlineLarge: titular(base.headlineLarge),
+      headlineMedium: titular(base.headlineMedium), headlineSmall: titular(base.headlineSmall),
+      titleLarge: titular(base.titleLarge), titleMedium: titular(base.titleMedium),
+      titleSmall: titular(base.titleSmall), bodyLarge: cuerpo(base.bodyLarge),
+      bodyMedium: cuerpo(base.bodyMedium), bodySmall: cuerpo(base.bodySmall),
+      labelLarge: cuerpo(base.labelLarge), labelMedium: cuerpo(base.labelMedium),
+      labelSmall: cuerpo(base.labelSmall),
     );
   }
 
@@ -97,7 +84,7 @@ class AppTheme {
       scrolledUnderElevation: 2,
       shadowColor: AppColors.cafe.withValues(alpha: 0.2),
       centerTitle: false,
-      titleTextStyle: GoogleFonts.fredoka(
+      titleTextStyle: GoogleFonts.rubik(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: AppColors.cafe,
@@ -112,7 +99,8 @@ class AppTheme {
       elevation: 3,
       shadowColor: AppColors.cafe.withValues(alpha: 0.25),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_radioTarjeta),
+        borderRadius: BorderRadius.circular(6),
+        side: const BorderSide(color: AppColors.cafe, width: 2.5),
       ),
       margin: const EdgeInsets.all(4),
     );
@@ -152,14 +140,15 @@ class AppTheme {
           AppColors.cafe.withValues(alpha: 0.35),
         ),
         textStyle: WidgetStateProperty.all(
-          GoogleFonts.fredoka(fontSize: 15, fontWeight: FontWeight.w600),
+          GoogleFonts.rubik(fontSize: 15, fontWeight: FontWeight.w800),
         ),
         padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(_radioBoton),
+            borderRadius: BorderRadius.circular(4),
+            side: const BorderSide(color: AppColors.cafe, width: 2.5),
           ),
         ),
       ),
@@ -197,14 +186,15 @@ class AppTheme {
           return AppColors.ocre.withValues(alpha: 0.08);
         }),
         textStyle: WidgetStateProperty.all(
-          GoogleFonts.fredoka(fontSize: 14, fontWeight: FontWeight.w500),
+          GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
         ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(_radioBoton),
+            borderRadius: BorderRadius.circular(4),
+            side: const BorderSide(color: AppColors.cafe, width: 2),
           ),
         ),
       ),
@@ -230,11 +220,11 @@ class AppTheme {
           return AppColors.rojo.withValues(alpha: 0.06);
         }),
         textStyle: WidgetStateProperty.all(
-          GoogleFonts.fredoka(fontSize: 14, fontWeight: FontWeight.w600),
+          GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(_radioBoton),
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
       ),
@@ -272,7 +262,7 @@ class AppTheme {
 
   static OutlineInputBorder _campoBorde(Color color, double ancho) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(_radioCampo),
+        borderRadius: BorderRadius.circular(4),
       borderSide: BorderSide(color: color, width: ancho),
     );
   }
@@ -284,30 +274,29 @@ class AppTheme {
       elevation: 5,
       focusElevation: 6,
       hoverElevation: 6,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_radioFab),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: const BorderSide(color: AppColors.cafe, width: 2.5)),
     );
   }
 
   static ChipThemeData _chipTheme() {
     return ChipThemeData(
       backgroundColor: AppColors.crema,
-      selectedColor: AppColors.ocre.withValues(alpha: 0.25),
+      selectedColor: AppColors.rosado.withValues(alpha: 0.35),
       disabledColor: AppColors.cafe.withValues(alpha: 0.12),
       side: BorderSide(
         color: AppColors.cafe.withValues(alpha: 0.35),
         width: 1.2,
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_radioChip),
+        borderRadius: BorderRadius.circular(4),
+        side: const BorderSide(color: AppColors.cafe, width: 2),
       ),
-      labelStyle: GoogleFonts.fredoka(
+      labelStyle: GoogleFonts.outfit(
         fontSize: 13,
         fontWeight: FontWeight.w500,
         color: AppColors.cafe,
       ),
-      secondaryLabelStyle: GoogleFonts.fredoka(
+      secondaryLabelStyle: GoogleFonts.outfit(
         fontSize: 13,
         fontWeight: FontWeight.w500,
         color: AppColors.cafe,
