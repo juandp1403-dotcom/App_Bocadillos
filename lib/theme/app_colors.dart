@@ -1,37 +1,32 @@
 import 'package:flutter/material.dart';
 
-/// Paleta Y2K del bocadillo veleño.
-///
-/// Crema de guayaba como fondo principal, cafe de panela para texto y
-/// contraste, rojo bocadillo y rosado guayaba para destacar, ocre y verde hoja
-/// como acentos. El rosa chicle y el azul pastel se reservan para reflejos y
-/// gradientes pequeños.
+/// Paleta Neo-Memphis inspirada en el bocadillo veleño.
 class AppColors {
   AppColors._();
 
   /// Crema de guayaba: fondo principal y superficies suaves.
-  static const Color crema = Color(0xFFF5EBDC);
+  static const Color crema = Color(0xFFFFF8F6);
 
   /// Cafe de panela: texto y elementos de contraste.
-  static const Color cafe = Color(0xFF5B3A29);
+  static const Color cafe = Color(0xFF2B1613);
 
   /// Rojo bocadillo: acciones principales y enfasis.
-  static const Color rojo = Color(0xFFD62828);
+  static const Color rojo = Color(0xFFD32F2F);
 
   /// Rosado guayaba: acento visible en tarjetas, indicadores y detalles.
-  static const Color rosado = Color(0xFFE86A83);
+  static const Color rosado = Color(0xFFFF9AAA);
 
   /// Ocre: bordes, iconos y pequenos destellos.
-  static const Color ocre = Color(0xFFC9951B);
+  static const Color ocre = Color(0xFFE4BEBA);
 
   /// Verde hoja de guayaba: acento secundario para estados e iconografia.
-  static const Color verde = Color(0xFF718B52);
+  static const Color verde = Color(0xFF168128);
 
   /// Rosa chicle: solo para reflejos o gradientes pequeños.
-  static const Color rosa = Color(0xFFFF70A6);
+  static const Color rosa = Color(0xFFE2165F);
 
   /// Azul pastel: solo para reflejos o gradientes pequeños.
-  static const Color azul = Color(0xFF8FD3FF);
+  static const Color azul = Color(0xFFFFE2DD);
 
   /// Rojo profundo para errores: debe distinguirse de la accion principal.
   static const Color error = Color(0xFFB3261E);

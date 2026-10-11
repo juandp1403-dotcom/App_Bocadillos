@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core/formato.dart';
 import '../../core/sesion.dart';
 import '../../rutas/rutas.dart';
+import '../../theme/app_colors.dart';
 import '../widgets/comunes.dart';
 import 'clientes_pantalla.dart';
 import 'inicio_pantalla.dart';
@@ -97,7 +98,13 @@ class _ShellPantallaState extends State<ShellPantalla> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(actual.titulo),
+        title: Row(
+          children: [
+            Text('DOÑA VÉLEZ', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.rojo, fontWeight: FontWeight.w900)),
+            const SizedBox(width: 12),
+            Text(actual.titulo.toUpperCase(), style: Theme.of(context).textTheme.labelLarge),
+          ],
+        ),
         actions: [
           PopupMenuButton<String>(
             tooltip: 'Cuenta',
@@ -141,6 +148,7 @@ class _ShellPantallaState extends State<ShellPantalla> {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
+              decoration: const BoxDecoration(color: AppColors.rojo),
               accountName: Text(usuario?.nombre ?? ''),
               accountEmail: Text(usuario?.email ?? ''),
               currentAccountPicture: CircleAvatar(
@@ -169,6 +177,8 @@ class _ShellPantallaState extends State<ShellPantalla> {
                 leading: Icon(destinos[i].icono),
                 title: Text(destinos[i].titulo),
                 selected: _indice == i,
+                selectedTileColor: AppColors.rosado.withValues(alpha: 0.35),
+                selectedColor: AppColors.rojo,
                 onTap: () {
                   setState(() => _indice = i);
                   Navigator.of(context).pop();

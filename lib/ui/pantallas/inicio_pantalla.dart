@@ -5,6 +5,7 @@ import '../../core/api_exception.dart';
 import '../../core/formato.dart';
 import '../../core/sesion.dart';
 import '../../modelos/modelos.dart';
+import '../../theme/app_colors.dart';
 import '../widgets/comunes.dart';
 
 class _Resumen {
@@ -99,33 +100,33 @@ class _InicioPantallaState extends State<InicioPantalla> {
             icono: Icons.people_outline,
             titulo: 'Clientes',
             valor: '${resumen.clientes}',
-            color: Colors.blue,
+              color: AppColors.rosa,
           ),
           _Tarjeta(
             icono: Icons.inventory_2_outlined,
             titulo: 'Productos',
             valor: '${resumen.productos}',
-            color: Colors.teal,
+              color: AppColors.verde,
           ),
           if (sesion.puedeVerProveedores)
             _Tarjeta(
               icono: Icons.local_shipping_outlined,
               titulo: 'Proveedores',
               valor: '${resumen.proveedores}',
-              color: Colors.brown,
+              color: AppColors.cafe,
             ),
           if (sesion.puedeVerVentas)
             _Tarjeta(
               icono: Icons.receipt_long_outlined,
               titulo: 'Ventas registradas',
               valor: '${resumen.ventas}',
-              color: Colors.deepOrange,
+              color: AppColors.rojo,
             ),
           _Tarjeta(
             icono: Icons.warning_amber_outlined,
             titulo: 'Productos con stock bajo',
             valor: '${resumen.stockBajo}',
-            color: resumen.stockBajo > 0 ? Colors.red : Colors.green,
+            color: resumen.stockBajo > 0 ? AppColors.rojo : AppColors.verde,
           ),
         ];
 
@@ -135,12 +136,15 @@ class _InicioPantallaState extends State<InicioPantalla> {
             padding: const EdgeInsets.all(16),
             children: [
               Text(
-                'Hola, ${sesion.usuario?.nombre ?? ''}',
-                style: Theme.of(context).textTheme.titleLarge,
+                'PANEL DE MANDO',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.cafe,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
-                'Resumen general de la fabrica',
+                'Resumen general de la fabrica y sus operaciones.',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 16),
@@ -217,7 +221,15 @@ class _Tarjeta extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icono, color: color, size: 32),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.16),
+                  border: Border.all(color: AppColors.cafe, width: 2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(icono, color: color, size: 28),
+              ),
               const SizedBox(height: 12),
               Text(
                 valor,
