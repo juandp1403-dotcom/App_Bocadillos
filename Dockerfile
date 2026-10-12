@@ -1,4 +1,28 @@
-FROM ghcr.io/cirruslabs/flutter:stable AS build
+FROM debian:bookworm-slim AS build
+
+ARG FLUTTER_VERSION=3.47.7
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    FLUTTER_HOME=/opt/flutter \
+    PATH=/opt/flutter/bin:/opt/flutter/bin/cache/dart-sdk/bin:$PATH \
+    CI=true \
+    FLUTTER_SUPPRESS_ANALYTICS=true
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        file \
+        git \
+        libglu1-mesa \
+        unzip \
+        xz-utils \
+        zip \
+    && rm -rf /var/lib/apt/lists/* \
+    && git clone --depth 1 --branch "${FLUTTER_VERSION}" \
+        https://github.com/flutter/flutter.git "${FLUTTER_HOME}" \
+    && flutter config --enable-web \
+    && flutter precache --web
 
 WORKDIR /app
 
