@@ -7,7 +7,7 @@ RUN flutter pub get
 
 COPY . .
 
-ARG API_BASE_URL
+ARG API_BASE_URL=https://backendfast.softlane.click
 RUN test -n "$API_BASE_URL" \
     && flutter build web --release --dart-define=API_BASE_URL="$API_BASE_URL"
 
