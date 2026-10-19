@@ -85,92 +85,79 @@ class _ClienteFormularioState extends State<ClienteFormulario> {
         title: Text(_esEdicion ? 'Editar cliente' : 'Nuevo cliente'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextFormField(
-                    controller: _nombre,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre *',
-                      prefixIcon: Icon(Icons.person_outline),
-                    ),
-                    validator: (valor) {
-                      final texto = valor?.trim() ?? '';
-                      if (texto.isEmpty) return 'El nombre es obligatorio';
-                      if (texto.length > 100) return 'Maximo 100 caracteres';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _telefono,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'Telefono',
-                      prefixIcon: Icon(Icons.phone_outlined),
-                    ),
-                    validator: (valor) {
-                      final texto = valor?.trim() ?? '';
-                      if (texto.length > 30) return 'Maximo 30 caracteres';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _correo,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Correo',
-                      prefixIcon: Icon(Icons.mail_outline),
-                    ),
-                    validator: (valor) {
-                      final texto = valor?.trim() ?? '';
-                      if (texto.isEmpty) return null;
-                      final valido = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-                          .hasMatch(texto);
-                      if (!valido) return 'Correo no valido';
-                      if (texto.length > 150) return 'Maximo 150 caracteres';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _direccion,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Direccion',
-                      prefixIcon: Icon(Icons.location_on_outlined),
-                    ),
-                    validator: (valor) {
-                      if ((valor ?? '').length > 200) {
-                        return 'Maximo 200 caracteres';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: _guardando ? null : _guardar,
-                    icon: _guardando
-                        ? const SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.save_outlined),
-                    label: Text(
-                      _esEdicion ? 'Guardar cambios' : 'Crear cliente',
-                    ),
-                  ),
-                ],
+        child: Form(
+          key: _formKey,
+          child: FormularioAdaptativo(
+            campos: [
+              TextFormField(
+                controller: _nombre,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre *',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
+                validator: (valor) {
+                  final texto = valor?.trim() ?? '';
+                  if (texto.isEmpty) return 'El nombre es obligatorio';
+                  if (texto.length > 100) return 'Maximo 100 caracteres';
+                  return null;
+                },
               ),
+              TextFormField(
+                controller: _telefono,
+                keyboardType: TextInputType.phone,
+                decoration: const InputDecoration(
+                  labelText: 'Telefono',
+                  prefixIcon: Icon(Icons.phone_outlined),
+                ),
+                validator: (valor) {
+                  final texto = valor?.trim() ?? '';
+                  if (texto.length > 30) return 'Maximo 30 caracteres';
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _correo,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'Correo',
+                  prefixIcon: Icon(Icons.mail_outline),
+                ),
+                validator: (valor) {
+                  final texto = valor?.trim() ?? '';
+                  if (texto.isEmpty) return null;
+                  final valido = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+                      .hasMatch(texto);
+                  if (!valido) return 'Correo no valido';
+                  if (texto.length > 150) return 'Maximo 150 caracteres';
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _direccion,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  labelText: 'Direccion',
+                  prefixIcon: Icon(Icons.location_on_outlined),
+                ),
+                validator: (valor) {
+                  if ((valor ?? '').length > 200) {
+                    return 'Maximo 200 caracteres';
+                  }
+                  return null;
+                },
+              ),
+            ],
+            accion: FilledButton.icon(
+              onPressed: _guardando ? null : _guardar,
+              icon: _guardando
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.save_outlined),
+              label: Text(_esEdicion ? 'Guardar cambios' : 'Crear cliente'),
             ),
           ),
         ),

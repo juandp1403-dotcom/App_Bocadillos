@@ -2,44 +2,44 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
-/// Contenedor inflado estilo Y2K con esquinas redondeadas, borde ocre,
-/// sombra suave, gradiente opcional y un reflejo blanco curvo arriba a la
-/// izquierda (tipo burbuja).
+/// Contenedor inflado estilo organico con esquinas redondeadas, borde
+/// beige, sombra suave, gradiente opcional y un reflejo blanco curvo arriba
+/// a la izquierda (tipo burbuja).
 ///
 /// Variantes de gradiente:
-/// - [BubbleContainer.calido]: rojo -> rosa chicle.
-/// - [BubbleContainer.pastel]: beige -> azul pastel.
+/// - [BubbleContainer.calido]: guayaba -> rojo bocadillo.
+/// - [BubbleContainer.pastel]: beige organico -> superficie clara.
 class BubbleContainer extends StatelessWidget {
   const BubbleContainer({
     super.key,
     required this.child,
-    this.gradient = const [AppColors.rojo, AppColors.rosa],
-    this.borderColor = AppColors.ocre,
+    this.gradient = const [AppColors.guayaba, AppColors.rojo],
+    this.borderColor = AppColors.borde,
     this.borderWidth = 1.5,
     this.radius = 32,
     this.padding = const EdgeInsets.all(16),
-    this.shadowColor = const Color(0x335B3A29),
+    this.shadowColor,
   });
 
   const BubbleContainer.calido({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
-  }) : gradient = const [AppColors.rojo, AppColors.rosado],
-       borderColor = AppColors.ocre,
+  }) : gradient = const [AppColors.guayaba, AppColors.rojo],
+       borderColor = AppColors.borde,
        borderWidth = 1.5,
        radius = 32,
-       shadowColor = const Color(0x335B3A29);
+       shadowColor = null;
 
   const BubbleContainer.pastel({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
-  }) : gradient = const [AppColors.crema, AppColors.azul],
-       borderColor = AppColors.ocre,
+  }) : gradient = const [AppColors.fondo, AppColors.superficie],
+       borderColor = AppColors.borde,
        borderWidth = 1.5,
        radius = 32,
-       shadowColor = const Color(0x335B3A29);
+       shadowColor = null;
 
   final Widget child;
   final List<Color> gradient;
@@ -47,7 +47,7 @@ class BubbleContainer extends StatelessWidget {
   final double borderWidth;
   final double radius;
   final EdgeInsetsGeometry padding;
-  final Color shadowColor;
+  final Color? shadowColor;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class BubbleContainer extends StatelessWidget {
         borderRadius: redondeo,
         boxShadow: [
           BoxShadow(
-            color: shadowColor,
+            color: shadowColor ?? AppColors.sombra,
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -88,11 +88,14 @@ class BubbleContainer extends StatelessWidget {
                 clipper: _ReflejoCurvoClipper(),
                 child: Container(
                   height: radius * 1.2 + 4,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [AppColors.reflejo, Colors.transparent],
+                      colors: [
+                        Colors.white.withValues(alpha: 0.4),
+                        Colors.transparent,
+                      ],
                     ),
                   ),
                 ),

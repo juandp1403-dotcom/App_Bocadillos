@@ -1,36 +1,46 @@
 import 'package:flutter/material.dart';
 
-/// Paleta Neo-Memphis inspirada en el bocadillo veleño.
+/// Paleta natural organica del bocadillo veleno.
+///
+/// [fondo] beige organico, [superficie] blanco calido para tarjetas,
+/// [guayaba] rosado para acciones principales, [verde] para exito,
+/// [rojo] para alertas y [cafe] para texto y bordes.
 class AppColors {
   AppColors._();
 
-  /// Beige de hoja de bijao: fondo principal y superficies suaves.
-  static const Color crema = Color(0xFFF1E5D2);
+  /// Beige organico: fondo principal de la aplicacion.
+  static const Color fondo = Color(0xFFF4EFE6);
 
-  /// Cafe de panela: texto y elementos de contraste.
-  static const Color cafe = Color(0xFF2B1613);
+  /// Beige claro / blanco calido: tarjetas, modales y superficies.
+  static const Color superficie = Color(0xFFFAF8F5);
 
-  /// Rojo bocadillo: acciones principales y enfasis.
-  static const Color rojo = Color(0xFFD32F2F);
+  /// Rosado guayaba: acentos principales y botones CTA.
+  static const Color guayaba = Color(0xFFE06A7B);
 
-  /// Rosado guayaba: acento visible en tarjetas, indicadores y detalles.
-  static const Color rosado = Color(0xFFFF9AAA);
+  /// Verde hoja: exito, badges y estados positivos.
+  static const Color verde = Color(0xFF4A7C59);
 
-  /// Ocre: bordes, iconos y pequenos destellos.
-  static const Color ocre = Color(0xFFE4BEBA);
+  /// Rojo bocadillo: alertas y elementos de contraste alto.
+  static const Color rojo = Color(0xFFC63D2F);
 
-  /// Verde hoja de guayaba: acento secundario para estados e iconografia.
-  static const Color verde = Color(0xFF168128);
+  /// Cafe tierra: texto principal, bordes y sombras suaves.
+  static const Color cafe = Color(0xFF3D2E24);
 
-  /// Rosa chicle: solo para reflejos o gradientes pequeños.
-  static const Color rosa = Color(0xFFE2165F);
+  /// Beige medio: bordes delgados que dan estructura sin saturar.
+  static const Color borde = Color(0xFFE4D9C4);
 
-  /// Azul pastel: solo para reflejos o gradientes pequeños.
-  static const Color azul = Color(0xFFFFE2DD);
+  /// Sombra muy suave en tono cafe para tarjetas y superficies.
+  static Color get sombra => cafe.withValues(alpha: 0.08);
 
-  /// Rojo profundo para errores: debe distinguirse de la accion principal.
-  static const Color error = Color(0xFFB3261E);
+  /// Cafe legible sobre fondo claro (texto secundario).
+  static Color get cafeSuave => cafe.withValues(alpha: 0.70);
 
-  /// Blanco translucido para reflejos tipo burbuja.
-  static const Color reflejo = Color(0x66FFFFFF);
+  /// Guayaba diluida para fondos de acento suaves.
+  static Color get guayabaSuave => guayaba.withValues(alpha: 0.12);
+
+  /// Verde diluido para fondos de exito suaves.
+  static Color get verdeSuave => verde.withValues(alpha: 0.12);
+
+  /// Rojo diluido para fondos de alerta suaves.
+  static Color get rojoSuave => rojo.withValues(alpha: 0.12);
 }

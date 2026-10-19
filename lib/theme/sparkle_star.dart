@@ -10,7 +10,7 @@ class SparkleStar extends StatelessWidget {
   const SparkleStar({
     super.key,
     this.size = 18,
-    this.color = AppColors.ocre,
+    this.color = AppColors.borde,
     this.opacidad = 1,
   });
 

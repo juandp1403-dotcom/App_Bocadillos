@@ -149,115 +149,103 @@ class _ProductoFormularioState extends State<ProductoFormulario> {
         title: Text(_esEdicion ? 'Editar producto' : 'Nuevo producto'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextFormField(
-                    controller: _nombre,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Nombre *',
-                      prefixIcon: Icon(Icons.fastfood_outlined),
-                    ),
-                    validator: (valor) {
-                      final texto = valor?.trim() ?? '';
-                      if (texto.isEmpty) return 'El nombre es obligatorio';
-                      if (texto.length > 120) return 'Maximo 120 caracteres';
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _tipo,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Tipo',
-                      hintText: 'Ej. horneado, relleno, empaque...',
-                      prefixIcon: Icon(Icons.category_outlined),
-                    ),
-                    validator: (valor) {
-                      if ((valor ?? '').length > 80) {
-                        return 'Maximo 80 caracteres';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _precio,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    decoration: const InputDecoration(
-                      labelText: 'Precio *',
-                      hintText: 'Ej. 3500.00',
-                      prefixIcon: Icon(Icons.attach_money),
-                    ),
-                    validator: (valor) {
-                      if ((valor ?? '').trim().isEmpty) {
-                        return 'El precio es obligatorio';
-                      }
-                      if (_parsearPrecio(valor!) == null) {
-                        return 'Precio no valido (maximo 2 decimales y mayor a 0)';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _stock,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Stock *',
-                      hintText: 'Unidades disponibles',
-                      prefixIcon: Icon(Icons.numbers),
-                    ),
-                    validator: (valor) {
-                      final texto = (valor ?? '').trim();
-                      final cantidad = int.tryParse(texto);
-                      if (texto.isEmpty) return 'El stock es obligatorio';
-                      if (cantidad == null || cantidad < 0) {
-                        return 'Debe ser un numero mayor o igual a 0';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  if (_cargandoProveedores)
-                    const LinearProgressIndicator()
-                  else
-                    DropdownButtonFormField<int?>(
-                      initialValue: _idProveedor,
-                      decoration: const InputDecoration(
-                        labelText: 'Proveedor',
-                        prefixIcon: Icon(Icons.local_shipping_outlined),
-                      ),
-                      items: _itemsProveedor(),
-                      onChanged: (valor) =>
-                          setState(() => _idProveedor = valor),
-                    ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: _guardando ? null : _guardar,
-                    icon: _guardando
-                        ? const SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.save_outlined),
-                    label: Text(
-                      _esEdicion ? 'Guardar cambios' : 'Crear producto',
-                    ),
-                  ),
-                ],
+        child: Form(
+          key: _formKey,
+          child: FormularioAdaptativo(
+            campos: [
+              TextFormField(
+                controller: _nombre,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre *',
+                  prefixIcon: Icon(Icons.fastfood_outlined),
+                ),
+                validator: (valor) {
+                  final texto = valor?.trim() ?? '';
+                  if (texto.isEmpty) return 'El nombre es obligatorio';
+                  if (texto.length > 120) return 'Maximo 120 caracteres';
+                  return null;
+                },
               ),
+              TextFormField(
+                controller: _tipo,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Tipo',
+                  hintText: 'Ej. horneado, relleno, empaque...',
+                  prefixIcon: Icon(Icons.category_outlined),
+                ),
+                validator: (valor) {
+                  if ((valor ?? '').length > 80) {
+                    return 'Maximo 80 caracteres';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _precio,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: const InputDecoration(
+                  labelText: 'Precio *',
+                  hintText: 'Ej. 3500.00',
+                  prefixIcon: Icon(Icons.attach_money),
+                ),
+                validator: (valor) {
+                  if ((valor ?? '').trim().isEmpty) {
+                    return 'El precio es obligatorio';
+                  }
+                  if (_parsearPrecio(valor!) == null) {
+                    return 'Precio no valido (maximo 2 decimales y mayor a 0)';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _stock,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Stock *',
+                  hintText: 'Unidades disponibles',
+                  prefixIcon: Icon(Icons.numbers),
+                ),
+                validator: (valor) {
+                  final texto = (valor ?? '').trim();
+                  final cantidad = int.tryParse(texto);
+                  if (texto.isEmpty) return 'El stock es obligatorio';
+                  if (cantidad == null || cantidad < 0) {
+                    return 'Debe ser un numero mayor o igual a 0';
+                  }
+                  return null;
+                },
+              ),
+              if (_cargandoProveedores)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 18),
+                  child: LinearProgressIndicator(),
+                )
+              else
+                DropdownButtonFormField<int?>(
+                  initialValue: _idProveedor,
+                  decoration: const InputDecoration(
+                    labelText: 'Proveedor',
+                    prefixIcon: Icon(Icons.local_shipping_outlined),
+                  ),
+                  items: _itemsProveedor(),
+                  onChanged: (valor) => setState(() => _idProveedor = valor),
+                ),
+            ],
+            accion: FilledButton.icon(
+              onPressed: _guardando ? null : _guardar,
+              icon: _guardando
+                  ? const SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.save_outlined),
+              label: Text(_esEdicion ? 'Guardar cambios' : 'Crear producto'),
             ),
           ),
         ),

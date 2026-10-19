@@ -89,74 +89,95 @@ class _VentaDetallePantallaState extends State<VentaDetallePantalla> {
           }
 
           return ListView(
-            padding: const EdgeInsets.all(16),
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Venta #${venta.idVenta}',
-                        style: Theme.of(context).textTheme.titleLarge,
+              ContenidoCentrado(
+                relleno: const EdgeInsets.all(16),
+                anchoMaximo: 900,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Venta #${venta.idVenta}',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 8),
+                            Text('Fecha: ${fechaHora(venta.fecha)}'),
+                            Text('Cliente #${venta.idCliente}'),
+                            const Divider(),
+                            Text(
+                              'Total: ${dinero(venta.total)}',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Calculado por el servidor (suma de subtotales).',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      Text('Fecha: ${fechaHora(venta.fecha)}'),
-                      Text('Cliente #${venta.idCliente}'),
-                      const Divider(),
-                      Text(
-                        'Total: ${dinero(venta.total)}',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Calculado por el servidor (suma de subtotales).',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Productos vendidos',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              if (venta.detalles.isEmpty)
-                const Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text('Esta venta no tiene detalles.'),
-                  ),
-                )
-              else
-                Card(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: const [
-                        DataColumn(label: Text('Producto')),
-                        DataColumn(label: Text('Cantidad'), numeric: true),
-                        DataColumn(label: Text('P. unitario'), numeric: true),
-                        DataColumn(label: Text('Subtotal'), numeric: true),
-                      ],
-                      rows: [
-                        for (final detalle in venta.detalles)
-                          DataRow(
-                            cells: [
-                              DataCell(Text('#${detalle.idProducto}')),
-                              DataCell(Text('${detalle.cantidad}')),
-                              DataCell(Text(dinero(detalle.precioUnitario))),
-                              DataCell(Text(dinero(detalle.subtotal))),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Productos vendidos',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    if (venta.detalles.isEmpty)
+                      const Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Text('Esta venta no tiene detalles.'),
+                        ),
+                      )
+                    else
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Producto')),
+                              DataColumn(
+                                label: Text('Cantidad'),
+                                numeric: true,
+                              ),
+                              DataColumn(
+                                label: Text('P. unitario'),
+                                numeric: true,
+                              ),
+                              DataColumn(
+                                label: Text('Subtotal'),
+                                numeric: true,
+                              ),
+                            ],
+                            rows: [
+                              for (final detalle in venta.detalles)
+                                DataRow(
+                                  cells: [
+                                    DataCell(Text('#${detalle.idProducto}')),
+                                    DataCell(Text('${detalle.cantidad}')),
+                                    DataCell(
+                                      Text(dinero(detalle.precioUnitario)),
+                                    ),
+                                    DataCell(Text(dinero(detalle.subtotal))),
+                                  ],
+                                ),
                             ],
                           ),
-                      ],
-                    ),
-                  ),
+                        ),
+                      ),
+                  ],
                 ),
+              ),
             ],
           );
         },
