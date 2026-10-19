@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Configuracion de conexion con el backend FastAPI.
 ///
 /// La URL base se puede sobreescribir en tiempo de compilacion:
@@ -17,19 +15,12 @@ class AppConfig {
     return limpio;
   }
 
-  /// URL por defecto de cada plataforma cuando no se define API_BASE_URL.
+  /// URL por defecto cuando no se define API_BASE_URL.
   ///
-  /// - Android (emulador): 10.0.2.2 equivale al localhost de la maquina.
-  /// - Android (fisico) / Web / Windows: localhost; en el celular fisico se
-  ///   debe pasar `--dart-define=API_BASE_URL=http://IP-DE-LA-PC:8000`
+  /// La aplicacion distribuida debe usar el backend publicado. Para desarrollo
+  /// local se puede sobreescribir con `--dart-define=API_BASE_URL=...`.
   static String _porDefecto() {
-    if (kIsWeb) return 'http://localhost:8000';
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return 'http://10.0.2.2:8000';
-      default:
-        return 'http://localhost:8000';
-    }
+    return 'https://backendfast.softlane.click';
   }
 
   /// URL base de la API (sin barra final).

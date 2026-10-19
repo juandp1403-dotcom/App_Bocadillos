@@ -31,7 +31,7 @@ class AppBocadillos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Fabrica de Bocadillos',
+      title: 'apk_bocadillos',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       onGenerateRoute: Rutas.generarRuta,
