@@ -3,13 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
-/// Radios de esquina del estilo Y2K (entre 24 y 32).
-const double _radioBoton = 28;
-const double _radioTarjeta = 28;
-const double _radioCampo = 28;
-const double _radioChip = 24;
-const double _radioFab = 32;
-
 /// Tema global Neo-Memphis de la fabrica.
 class AppTheme {
   AppTheme._();
