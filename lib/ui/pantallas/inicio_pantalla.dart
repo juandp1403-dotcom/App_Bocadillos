@@ -169,7 +169,7 @@ class _InicioPantallaState extends State<InicioPantalla> {
                       crossAxisCount: columnas,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: columnas == 1 ? 3.2 : 1.65,
+                      mainAxisExtent: columnas == 1 ? 156 : 180,
                     ),
                     itemBuilder: (context, indice) => tarjetas[indice],
                   );
