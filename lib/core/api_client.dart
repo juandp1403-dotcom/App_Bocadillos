@@ -143,10 +143,10 @@ class ApiClient {
       // inicializar), se da un mensaje accionable en lugar de un generico.
       final detalle = cuerpo == null && respuesta.statusCode >= 500
           ? 'El servidor respondio con un error interno '
-              '(HTTP ${respuesta.statusCode}). Verifica que el backend este '
-              'inicializado y tenga usuarios semilla:\n'
-              '1. alembic upgrade head (crea las tablas)\n'
-              '2. python seed.py (crea los usuarios)'
+                '(HTTP ${respuesta.statusCode}). Verifica que el backend este '
+                'inicializado y tenga usuarios semilla:\n'
+                '1. alembic upgrade head (crea las tablas)\n'
+                '2. python seed.py (crea los usuarios)'
           : _extraerDetalle(cuerpo);
       final codigo = _extraerCodigo(cuerpo);
       final errores = cuerpo is Map<String, dynamic> && cuerpo['errors'] is List

@@ -100,9 +100,18 @@ class _ShellPantallaState extends State<ShellPantalla> {
       appBar: AppBar(
         title: Row(
           children: [
-            Text('DOÑA VÉLEZ', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.rojo, fontWeight: FontWeight.w900)),
+            Text(
+              'DOÑA VÉLEZ',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                color: AppColors.rojo,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
             const SizedBox(width: 12),
-            Text(actual.titulo.toUpperCase(), style: Theme.of(context).textTheme.labelLarge),
+            Text(
+              actual.titulo.toUpperCase(),
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
           ],
         ),
         actions: [

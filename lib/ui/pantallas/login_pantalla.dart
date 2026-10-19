@@ -68,10 +68,28 @@ class _LoginPantallaState extends State<LoginPantalla> {
         children: [
           const Icon(Icons.spa, color: Colors.white, size: 48),
           const SizedBox(height: 20),
-          Text('DOÑA VÉLEZ', style: tema.textTheme.displaySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w900)),
-          Text('FÁBRICA ARTESANAL · VÉLEZ SANTANDER', style: tema.textTheme.labelLarge?.copyWith(color: Colors.white, letterSpacing: 1.2)),
+          Text(
+            'DOÑA VÉLEZ',
+            style: tema.textTheme.displaySmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          Text(
+            'FÁBRICA ARTESANAL · VÉLEZ SANTANDER',
+            style: tema.textTheme.labelLarge?.copyWith(
+              color: Colors.white,
+              letterSpacing: 1.2,
+            ),
+          ),
           const SizedBox(height: 24),
-          Text('El sabor de la guayaba, hecho con tradición.', style: tema.textTheme.headlineSmall?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+          Text(
+            'El sabor de la guayaba, hecho con tradición.',
+            style: tema.textTheme.headlineSmall?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ],
       ),
     ),
@@ -85,18 +103,29 @@ class _LoginPantallaState extends State<LoginPantalla> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Bienvenido a la fábrica', style: tema.textTheme.headlineSmall),
-            Text('Ingresa para gestionar inventario y ventas.', style: tema.textTheme.bodyMedium),
+            Text(
+              'Bienvenido a la fábrica',
+              style: tema.textTheme.headlineSmall,
+            ),
+            Text(
+              'Ingresa para gestionar inventario y ventas.',
+              style: tema.textTheme.bodyMedium,
+            ),
             const SizedBox(height: 24),
             TextFormField(
               controller: _correo,
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
-              decoration: const InputDecoration(labelText: 'Correo electronico', prefixIcon: Icon(Icons.mail_outline)),
+              decoration: const InputDecoration(
+                labelText: 'Correo electronico',
+                prefixIcon: Icon(Icons.mail_outline),
+              ),
               validator: (valor) {
                 final texto = valor?.trim() ?? '';
                 if (texto.isEmpty) return 'Ingresa tu correo';
-                if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(texto)) return 'Correo no valido';
+                if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(texto)) {
+                  return 'Correo no valido';
+                }
                 return null;
               },
             ),
@@ -109,8 +138,13 @@ class _LoginPantallaState extends State<LoginPantalla> {
                 labelText: 'Contrasena',
                 prefixIcon: const Icon(Icons.lock_outline),
                 suffixIcon: IconButton(
-                  icon: Icon(_ocultarClave ? Icons.visibility_outlined : Icons.visibility_off_outlined),
-                  onPressed: () => setState(() => _ocultarClave = !_ocultarClave),
+                  icon: Icon(
+                    _ocultarClave
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
+                  onPressed: () =>
+                      setState(() => _ocultarClave = !_ocultarClave),
                 ),
               ),
               validator: (valor) {
@@ -128,7 +162,11 @@ class _LoginPantallaState extends State<LoginPantalla> {
             FilledButton(
               onPressed: _enviando ? null : _ingresar,
               child: _enviando
-                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Text('INGRESAR A LA FÁBRICA'),
             ),
           ],
@@ -144,10 +182,15 @@ class _LoginPantallaState extends State<LoginPantalla> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 760) {
-            return ListView(children: [
-              _marca(tema),
-              Padding(padding: const EdgeInsets.all(24), child: _formulario(tema)),
-            ]);
+            return ListView(
+              children: [
+                _marca(tema),
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: _formulario(tema),
+                ),
+              ],
+            );
           }
           return Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,

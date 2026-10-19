@@ -15,10 +15,10 @@ void main() {
       ),
     );
 
-    expect(find.text('Fabrica de Bocadillos'), findsOneWidget);
+    expect(find.text('DOÑA VÉLEZ'), findsOneWidget);
     expect(find.text('Correo electronico'), findsOneWidget);
     expect(find.text('Contrasena'), findsOneWidget);
-    expect(find.text('Ingresar'), findsOneWidget);
+    expect(find.text('INGRESAR A LA FÁBRICA'), findsOneWidget);
   });
 
   testWidgets('El login valida campos vacios', (tester) async {
@@ -29,7 +29,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text('Ingresar'));
+    await tester.tap(find.text('INGRESAR A LA FÁBRICA'));
     await tester.pump();
 
     expect(find.text('Ingresa tu correo'), findsOneWidget);
