@@ -100,13 +100,13 @@ class _InicioPantallaState extends State<InicioPantalla> {
             icono: Icons.people_outline,
             titulo: 'Clientes',
             valor: '${resumen.clientes}',
-              color: AppColors.rosa,
+            color: AppColors.rosa,
           ),
           _Tarjeta(
             icono: Icons.inventory_2_outlined,
             titulo: 'Productos',
             valor: '${resumen.productos}',
-              color: AppColors.verde,
+            color: AppColors.verde,
           ),
           if (sesion.puedeVerProveedores)
             _Tarjeta(
@@ -148,7 +148,33 @@ class _InicioPantallaState extends State<InicioPantalla> {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 16),
-              Wrap(spacing: 12, runSpacing: 12, children: tarjetas),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final ancho = constraints.maxWidth;
+                  final columnas = ancho >= 1200
+                      ? 5
+                      : ancho >= 900
+                      ? 4
+                      : ancho >= 620
+                      ? 3
+                      : ancho >= 380
+                      ? 2
+                      : 1;
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: tarjetas.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columnas,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: columnas == 1 ? 3.2 : 1.65,
+                    ),
+                    itemBuilder: (context, indice) => tarjetas[indice],
+                  );
+                },
+              ),
               const SizedBox(height: 24),
               if (sesion.puedeVerVentas) ...[
                 Text(
@@ -214,18 +240,23 @@ class _Tarjeta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 220,
       child: Card(
+        color: color.withValues(alpha: 0.13),
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6),
+          side: BorderSide(color: color, width: 2.5),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.16),
-                  border: Border.all(color: AppColors.cafe, width: 2),
+                  color: color.withValues(alpha: 0.2),
+                  border: Border.all(color: color, width: 2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Icon(icono, color: color, size: 28),

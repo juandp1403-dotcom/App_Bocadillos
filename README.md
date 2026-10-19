@@ -89,7 +89,7 @@ La barra final se elimina sola (`lib/core/config.dart`).
 ```powershell
 dart format lib test     # sin cambios pendientes
 flutter analyze          # 0 issues
-flutter test             # 26 tests
+flutter test             # suite de pruebas unitarias y widgets
 flutter build web --release
 ```
 
@@ -124,6 +124,9 @@ test/
   widget_test.dart      login y modelos
   api_client_test.dart  cabeceras, 200/201/204, 401/403/404/409/422, timeout
   permisos_test.dart    destinos del Drawer por rol (ADMIN/ALMACEN/VENTAS)
+  servicios_api_test.dart contratos CRUD y paginacion de clientes/productos/proveedores
+  sesion_test.dart      login, cierre de sesion y permisos por rol
+  inicio_pantalla_test.dart resumen y tarjetas del tablero
 ```
 
 ## Rutas y vistas
