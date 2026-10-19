@@ -2,7 +2,7 @@
     <!-- Necesaria tambien en release para hablar con la API. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="app_bocadillos"
+        android:label="apk_bocadillos"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
