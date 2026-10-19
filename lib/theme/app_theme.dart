@@ -55,16 +55,25 @@ class AppTheme {
 
   /// Usa Rubik para titulares y Outfit para lectura y formularios.
   static TextTheme _aplicarFredoka(TextTheme base) {
-    TextStyle titular(TextStyle? estilo) => GoogleFonts.rubik(textStyle: estilo);
-    TextStyle cuerpo(TextStyle? estilo) => GoogleFonts.outfit(textStyle: estilo);
+    TextStyle titular(TextStyle? estilo) =>
+        GoogleFonts.rubik(textStyle: estilo);
+    TextStyle cuerpo(TextStyle? estilo) =>
+        GoogleFonts.outfit(textStyle: estilo);
     return base.copyWith(
-      displayLarge: titular(base.displayLarge), displayMedium: titular(base.displayMedium),
-      displaySmall: titular(base.displaySmall), headlineLarge: titular(base.headlineLarge),
-      headlineMedium: titular(base.headlineMedium), headlineSmall: titular(base.headlineSmall),
-      titleLarge: titular(base.titleLarge), titleMedium: titular(base.titleMedium),
-      titleSmall: titular(base.titleSmall), bodyLarge: cuerpo(base.bodyLarge),
-      bodyMedium: cuerpo(base.bodyMedium), bodySmall: cuerpo(base.bodySmall),
-      labelLarge: cuerpo(base.labelLarge), labelMedium: cuerpo(base.labelMedium),
+      displayLarge: titular(base.displayLarge),
+      displayMedium: titular(base.displayMedium),
+      displaySmall: titular(base.displaySmall),
+      headlineLarge: titular(base.headlineLarge),
+      headlineMedium: titular(base.headlineMedium),
+      headlineSmall: titular(base.headlineSmall),
+      titleLarge: titular(base.titleLarge),
+      titleMedium: titular(base.titleMedium),
+      titleSmall: titular(base.titleSmall),
+      bodyLarge: cuerpo(base.bodyLarge),
+      bodyMedium: cuerpo(base.bodyMedium),
+      bodySmall: cuerpo(base.bodySmall),
+      labelLarge: cuerpo(base.labelLarge),
+      labelMedium: cuerpo(base.labelMedium),
       labelSmall: cuerpo(base.labelSmall),
     );
   }
@@ -216,9 +225,7 @@ class AppTheme {
           GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
       ),
     );
@@ -255,7 +262,7 @@ class AppTheme {
 
   static OutlineInputBorder _campoBorde(Color color, double ancho) {
     return OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(4),
       borderSide: BorderSide(color: color, width: ancho),
     );
   }
@@ -267,7 +274,10 @@ class AppTheme {
       elevation: 5,
       focusElevation: 6,
       hoverElevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: const BorderSide(color: AppColors.cafe, width: 2.5)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: const BorderSide(color: AppColors.cafe, width: 2.5),
+      ),
     );
   }
 

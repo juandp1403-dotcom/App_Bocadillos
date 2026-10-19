@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -25,9 +29,7 @@ jobs:
         run: flutter pub get
 
       - name: Verificar formato Dart
-        run: >-
-          dart format --output=none --set-exit-if-changed
-          test lib/theme/app_colors.dart lib/ui/pantallas/inicio_pantalla.dart
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Analizar Dart
         run: flutter analyze
