@@ -58,7 +58,13 @@ class _LoginPantallaState extends State<LoginPantalla> {
   }
 
   Widget _marca(ThemeData tema) => Container(
-    color: AppColors.rojo,
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [AppColors.guayaba, AppColors.rojo],
+      ),
+    ),
     padding: const EdgeInsets.all(32),
     child: ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 430),
@@ -66,7 +72,14 @@ class _LoginPantallaState extends State<LoginPantalla> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.spa, color: Colors.white, size: 48),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Icon(Icons.spa, color: Colors.white, size: 40),
+          ),
           const SizedBox(height: 20),
           Text(
             'DOÑA VÉLEZ',
@@ -78,7 +91,7 @@ class _LoginPantallaState extends State<LoginPantalla> {
           Text(
             'FÁBRICA ARTESANAL · VÉLEZ SANTANDER',
             style: tema.textTheme.labelLarge?.copyWith(
-              color: Colors.white,
+              color: Colors.white.withValues(alpha: 0.9),
               letterSpacing: 1.2,
             ),
           ),
@@ -179,12 +192,20 @@ class _LoginPantallaState extends State<LoginPantalla> {
   Widget build(BuildContext context) {
     final tema = Theme.of(context);
     return Scaffold(
+      backgroundColor: AppColors.fondo,
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth < 760) {
+            // En telefonos se respetan los insets (notch y barra de gestos)
+            // manteniendo el panel rojo a sangre por los lados.
+            final viewPadding = MediaQuery.viewPaddingOf(context);
             return ListView(
+              padding: EdgeInsets.only(bottom: viewPadding.bottom),
               children: [
-                _marca(tema),
+                Padding(
+                  padding: EdgeInsets.only(top: viewPadding.top),
+                  child: _marca(tema),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(24),
                   child: _formulario(tema),

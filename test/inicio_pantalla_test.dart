@@ -101,7 +101,7 @@ void main() {
         ChangeNotifierProvider<Sesion>.value(
           value: sesion,
           child: MaterialApp(
-            theme: ThemeData(scaffoldBackgroundColor: AppColors.crema),
+            theme: ThemeData(scaffoldBackgroundColor: AppColors.fondo),
             home: const InicioPantalla(),
           ),
         ),

@@ -6,7 +6,7 @@ import 'app_colors.dart';
 
 /// Marca mínima de guayaba/bocadillo veleño.
 class GuavaMark extends StatelessWidget {
-  const GuavaMark({super.key, this.size = 64, this.color = AppColors.rosado});
+  const GuavaMark({super.key, this.size = 64, this.color = AppColors.guayaba});
 
   final double size;
   final Color color;
@@ -60,7 +60,7 @@ class _GuavaPainter extends CustomPainter {
     canvas.drawCircle(centro, radio * 0.74, Paint()..color = _claro(0.35));
     canvas.drawCircle(centro, radio * 0.42, Paint()..color = _claro(0.62));
 
-    final semilla = Paint()..color = AppColors.ocre;
+    final semilla = Paint()..color = AppColors.borde;
     for (var i = 0; i < 5; i++) {
       final angulo = (i * 2 * math.pi) / 5 - 1.25;
       final p =
@@ -72,7 +72,7 @@ class _GuavaPainter extends CustomPainter {
       canvas.drawCircle(p, ref * 1.6, semilla);
     }
 
-    final brillo = Paint()..color = AppColors.reflejo;
+    final brillo = Paint()..color = Colors.white.withValues(alpha: 0.4);
     final caminoBrillo = Path()
       ..moveTo(centro.dx - radio * 0.62, centro.dy - radio * 0.5)
       ..cubicTo(

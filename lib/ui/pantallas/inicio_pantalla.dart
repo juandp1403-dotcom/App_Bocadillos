@@ -100,7 +100,7 @@ class _InicioPantallaState extends State<InicioPantalla> {
             icono: Icons.people_outline,
             titulo: 'Clientes',
             valor: '${resumen.clientes}',
-            color: AppColors.rosa,
+            color: AppColors.guayaba,
           ),
           _Tarjeta(
             icono: Icons.inventory_2_outlined,
@@ -133,87 +133,90 @@ class _InicioPantallaState extends State<InicioPantalla> {
         return RefreshIndicator(
           onRefresh: () async => _reintentar(),
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.only(bottom: 24),
             children: [
-              Text(
-                'PANEL DE MANDO',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.cafe,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Resumen general de la fabrica y sus operaciones.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 16),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final ancho = constraints.maxWidth;
-                  final columnas = ancho >= 1200
-                      ? 5
-                      : ancho >= 900
-                      ? 4
-                      : ancho >= 620
-                      ? 3
-                      : ancho >= 380
-                      ? 2
-                      : 1;
-
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: tarjetas.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columnas,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      mainAxisExtent: columnas == 1 ? 156 : 180,
+              ContenidoCentrado(
+                relleno: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'PANEL DE MANDO',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.cafe,
+                          ),
                     ),
-                    itemBuilder: (context, indice) => tarjetas[indice],
-                  );
-                },
+                    const SizedBox(height: 4),
+                    Text(
+                      'Resumen general de la fabrica y sus operaciones.',
+                      style: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(color: AppColors.cafeSuave),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 24),
-              if (sesion.puedeVerVentas) ...[
-                Text(
-                  'Ultimas ventas',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Card(
-                  child: resumen.ultimasVentas.isEmpty
-                      ? const Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Text('Todavia no hay ventas registradas.'),
-                        )
-                      : Column(
-                          children: [
-                            for (final venta in resumen.ultimasVentas)
-                              ListTile(
-                                leading: const Icon(Icons.receipt_outlined),
-                                title: Text('Venta #${venta.idVenta}'),
-                                subtitle: Text(fechaHora(venta.fecha)),
-                                trailing: Text(
-                                  dinero(venta.total),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+              CuadriculaAdaptativa(
+                items: tarjetas,
+                altoTarjeta: 168,
+                relleno: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                tarjeta: (context, indice) => tarjetas[indice],
+              ),
+              ContenidoCentrado(
+                relleno: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (sesion.puedeVerVentas) ...[
+                      Text(
+                        'Ultimas ventas',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Card(
+                        child: resumen.ultimasVentas.isEmpty
+                            ? const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  'Todavia no hay ventas registradas.',
                                 ),
+                              )
+                            : Column(
+                                children: [
+                                  for (final venta in resumen.ultimasVentas)
+                                    ListTile(
+                                      leading: const Icon(
+                                        Icons.receipt_outlined,
+                                        color: AppColors.guayaba,
+                                      ),
+                                      title: Text('Venta #${venta.idVenta}'),
+                                      subtitle: Text(fechaHora(venta.fecha)),
+                                      trailing: Text(
+                                        dinero(venta.total),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                    Card(
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.dns_outlined,
+                          color: AppColors.verde,
                         ),
-                ),
-              ],
-              const SizedBox(height: 24),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.dns_outlined),
-                  title: const Text('Servidor conectado'),
-                  subtitle: Text(
-                    'API en ${Uri.parse(context.read<Sesion>().api.baseUrl).host}',
-                  ),
+                        title: const Text('Servidor conectado'),
+                        subtitle: Text(
+                          'API en ${Uri.parse(context.read<Sesion>().api.baseUrl).host}',
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -239,35 +242,43 @@ class _Tarjeta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Card(
-        color: color.withValues(alpha: 0.13),
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(6),
-          side: BorderSide(color: color, width: 2.5),
-        ),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {},
         child: Padding(
           padding: const EdgeInsets.all(18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.2),
-                  border: Border.all(color: color, width: 2),
-                  borderRadius: BorderRadius.circular(4),
+                  color: color.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(icono, color: color, size: 28),
+                child: Icon(icono, color: color, size: 26),
               ),
-              const SizedBox(height: 12),
+              const Spacer(),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  valor,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.cafe,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 2),
               Text(
-                valor,
-                style: Theme.of(context).textTheme.headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                titulo,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: AppColors.cafeSuave),
               ),
-              Text(titulo, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),

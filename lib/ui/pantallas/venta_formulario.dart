@@ -6,6 +6,7 @@ import '../../core/formato.dart';
 import '../../core/sesion.dart';
 import '../../modelos/modelos.dart';
 import '../../servicios/ventas_api.dart';
+import '../../theme/app_colors.dart';
 import '../widgets/comunes.dart';
 
 class _ItemCarrito {
@@ -211,248 +212,312 @@ class _VentaFormularioState extends State<VentaFormulario> {
           ? panelCargando('Cargando clientes y productos...')
           : _error != null
           ? panelError(_error!, reintento: _cargar)
-          : ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                _seccion(
-                  titulo: '1. Cliente',
-                  icono: Icons.person_outline,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+          : LayoutBuilder(
+              builder: (context, restricciones) {
+                // En escritorio el carrito queda fijo a la derecha para
+                // acompanar el flujo de seleccion de productos.
+                if (restricciones.maxWidth >= 1000) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextField(
-                        controller: _busquedaCliente,
-                        onChanged: (_) => setState(() {}),
-                        decoration: InputDecoration(
-                          hintText: 'Buscar cliente...',
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: _busquedaCliente.text.isEmpty
-                              ? null
-                              : IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    _busquedaCliente.clear();
-                                    setState(() {});
-                                  },
-                                ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      if (_clientes.isEmpty)
-                        const Text('No hay clientes registrados.')
-                      else ...[
-                        DropdownButtonFormField<int>(
-                          initialValue: _idCliente,
-                          hint: const Text('Selecciona un cliente'),
-                          items: [
-                            for (final cliente in _clientesFiltrados)
-                              DropdownMenuItem(
-                                value: cliente.idCliente,
-                                child: Text(
-                                  '#${cliente.idCliente} - ${cliente.nombreCliente}',
-                                ),
-                              ),
-                          ],
-                          onChanged: (valor) {
-                            setState(() {
-                              _idCliente = valor;
-                              _clienteElegido = null;
-                              for (final c in _clientes) {
-                                if (c.idCliente == valor) _clienteElegido = c;
-                              }
-                            });
-                          },
-                          validator: (_) => _idCliente == null
-                              ? 'Selecciona un cliente'
-                              : null,
-                        ),
-                        if (_clientesFiltrados.isEmpty)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 8),
-                            child: Text(
-                              'Ningun cliente coincide con la busqueda.',
-                            ),
-                          ),
-                      ],
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _seccion(
-                  titulo: '2. Productos',
-                  icono: Icons.inventory_2_outlined,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextField(
-                        controller: _busquedaProducto,
-                        onChanged: (_) => setState(() {}),
-                        decoration: InputDecoration(
-                          hintText: 'Buscar producto...',
-                          prefixIcon: const Icon(Icons.search),
-                          suffixIcon: _busquedaProducto.text.isEmpty
-                              ? null
-                              : IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    _busquedaProducto.clear();
-                                    setState(() {});
-                                  },
-                                ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      if (_productos.isEmpty)
-                        const Text('No hay productos registrados.')
-                      else ...[
-                        for (final producto in _productosFiltrados.take(50))
-                          ListTile(
-                            dense: true,
-                            leading: CircleAvatar(
-                              child: Text('${producto.stock}'),
-                            ),
-                            title: Text(producto.nombreProducto),
-                            subtitle: Text(
-                              '${dinero(producto.precio)}  |  '
-                              '${producto.tipo ?? "sin tipo"}',
-                            ),
-                            trailing: IconButton(
-                              tooltip: 'Agregar al carrito',
-                              icon: const Icon(Icons.add_shopping_cart),
-                              onPressed: () => _agregar(producto),
-                            ),
-                          ),
-                        if (_productosFiltrados.length > 50)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(
-                              'Se muestran los primeros 50 de '
-                              '${_productosFiltrados.length}. '
-                              'Usa la busqueda para encontrar los demas.',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                      ],
-                      if (_productosFiltrados.isEmpty && _productos.isNotEmpty)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8),
-                          child: Text(
-                            'Ningun producto coincide con la busqueda.',
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _seccion(
-                  titulo: '3. Carrito',
-                  icono: Icons.shopping_cart_outlined,
-                  child: _carrito.isEmpty
-                      ? const Text('Aun no has agregado productos.')
-                      : Column(
-                          children: [
-                            for (final item in _carrito)
-                              ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text(item.producto.nombreProducto),
-                                subtitle: Text(
-                                  '${dinero(item.producto.precio)} c/u  |  '
-                                  'Subtotal ${dinero(item.subtotal)}',
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.remove_circle_outline,
-                                      ),
-                                      onPressed: () => _disminuir(item),
-                                    ),
-                                    Text('${item.cantidad}'),
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.add_circle_outline,
-                                      ),
-                                      onPressed: () => _aumentar(item),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete_outline),
-                                      onPressed: () =>
-                                          setState(() => _carrito.remove(item)),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            const Divider(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(24),
+                          child: ContenidoCentrado(
+                            anchoMaximo: 720,
+                            relleno: EdgeInsets.zero,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                Text(
-                                  'Total estimado',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium,
-                                ),
-                                Text(
-                                  dinero(_total),
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
+                                _seccionCliente(),
+                                const SizedBox(height: 16),
+                                _seccionProductos(),
                               ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'El total final lo calcula el servidor.',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
+                          ),
                         ),
-                ),
-                const SizedBox(height: 24),
-                FilledButton.icon(
-                  onPressed: _guardando ? null : _registrar,
-                  icon: _guardando
-                      ? const SizedBox(
-                          height: 18,
-                          width: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.point_of_sale),
-                  label: Text(
-                    _carrito.isEmpty
-                        ? 'Registrar venta'
-                        : 'Registrar venta  |  ${dinero(_total)}',
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
+                      ),
+                      SizedBox(
+                        width: 400,
+                        child: Card(
+                          margin: const EdgeInsets.all(16),
+                          clipBehavior: Clip.antiAlias,
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: _seccionCarrito(mostrarBoton: true),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _seccionCliente(),
+                    const SizedBox(height: 16),
+                    _seccionProductos(),
+                    const SizedBox(height: 16),
+                    _seccion(mostrarBoton: true),
+                  ],
+                );
+              },
             ),
     );
   }
 
-  Widget _seccion({
-    required String titulo,
-    required IconData icono,
-    required Widget child,
-  }) {
+  Widget _seccion({required bool mostrarBoton}) {
     return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: _seccionCarrito(mostrarBoton: mostrarBoton),
+      ),
+    );
+  }
+
+  Widget _seccionCliente() {
+    return Card(
+      clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
               children: [
-                Icon(icono),
+                const Icon(Icons.person_outline, color: AppColors.guayaba),
                 const SizedBox(width: 8),
-                Text(titulo, style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  '1. Cliente',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            child,
+            TextField(
+              controller: _busquedaCliente,
+              onChanged: (_) => setState(() {}),
+              decoration: InputDecoration(
+                hintText: 'Buscar cliente...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _busquedaCliente.text.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _busquedaCliente.clear();
+                          setState(() {});
+                        },
+                      ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (_clientes.isEmpty)
+              const Text('No hay clientes registrados.')
+            else ...[
+              DropdownButtonFormField<int>(
+                initialValue: _idCliente,
+                hint: const Text('Selecciona un cliente'),
+                items: [
+                  for (final cliente in _clientesFiltrados)
+                    DropdownMenuItem(
+                      value: cliente.idCliente,
+                      child: Text(
+                        '#${cliente.idCliente} - ${cliente.nombreCliente}',
+                      ),
+                    ),
+                ],
+                onChanged: (valor) {
+                  setState(() {
+                    _idCliente = valor;
+                    _clienteElegido = null;
+                    for (final c in _clientes) {
+                      if (c.idCliente == valor) _clienteElegido = c;
+                    }
+                  });
+                },
+                validator: (_) =>
+                    _idCliente == null ? 'Selecciona un cliente' : null,
+              ),
+              if (_clientesFiltrados.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text('Ningun cliente coincide con la busqueda.'),
+                ),
+            ],
           ],
         ),
       ),
+    );
+  }
+
+  Widget _seccionProductos() {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.inventory_2_outlined, color: AppColors.verde),
+                const SizedBox(width: 8),
+                Text(
+                  '2. Productos',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _busquedaProducto,
+              onChanged: (_) => setState(() {}),
+              decoration: InputDecoration(
+                hintText: 'Buscar producto...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _busquedaProducto.text.isEmpty
+                    ? null
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _busquedaProducto.clear();
+                          setState(() {});
+                        },
+                      ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (_productos.isEmpty)
+              const Text('No hay productos registrados.')
+            else ...[
+              for (final producto in _productosFiltrados.take(50))
+                ListTile(
+                  dense: true,
+                  leading: CircleAvatar(
+                    backgroundColor: AppColors.verdeSuave,
+                    foregroundColor: AppColors.verde,
+                    child: Text('${producto.stock}'),
+                  ),
+                  title: Text(producto.nombreProducto),
+                  subtitle: Text(
+                    '${dinero(producto.precio)}  |  '
+                    '${producto.tipo ?? "sin tipo"}',
+                  ),
+                  trailing: IconButton(
+                    tooltip: 'Agregar al carrito',
+                    icon: const Icon(Icons.add_shopping_cart),
+                    onPressed: () => _agregar(producto),
+                  ),
+                ),
+              if (_productosFiltrados.length > 50)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    'Se muestran los primeros 50 de '
+                    '${_productosFiltrados.length}. '
+                    'Usa la busqueda para encontrar los demas.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+            ],
+            if (_productosFiltrados.isEmpty && _productos.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text('Ningun producto coincide con la busqueda.'),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _seccionCarrito({required bool mostrarBoton}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.shopping_cart_outlined, color: AppColors.cafe),
+            const SizedBox(width: 8),
+            Text('3. Carrito', style: Theme.of(context).textTheme.titleMedium),
+          ],
+        ),
+        const SizedBox(height: 12),
+        if (_carrito.isEmpty)
+          const Text('Aun no has agregado productos.')
+        else ...[
+          for (final item in _carrito)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(item.producto.nombreProducto),
+              subtitle: Text(
+                '${dinero(item.producto.precio)} c/u  |  '
+                'Subtotal ${dinero(item.subtotal)}',
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    tooltip: 'Quitar unidad',
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () => _disminuir(item),
+                  ),
+                  Text('${item.cantidad}'),
+                  IconButton(
+                    tooltip: 'Agregar unidad',
+                    icon: const Icon(Icons.add_circle_outline),
+                    onPressed: () => _aumentar(item),
+                  ),
+                  IconButton(
+                    tooltip: 'Eliminar del carrito',
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () => setState(() => _carrito.remove(item)),
+                  ),
+                ],
+              ),
+            ),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Total estimado',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                dinero(_total),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'El total final lo calcula el servidor.',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+        if (mostrarBoton) ...[
+          const SizedBox(height: 20),
+          FilledButton.icon(
+            onPressed: _guardando ? null : _registrar,
+            icon: _guardando
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.point_of_sale),
+            label: Text(
+              _carrito.isEmpty
+                  ? 'Registrar venta'
+                  : 'Registrar venta  |  ${dinero(_total)}',
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
