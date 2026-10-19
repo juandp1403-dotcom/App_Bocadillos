@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  /// Crema de guayaba: fondo principal y superficies suaves.
-  static const Color crema = Color(0xFFFFF8F6);
+  /// Beige de hoja de bijao: fondo principal y superficies suaves.
+  static const Color crema = Color(0xFFF1E5D2);
 
   /// Cafe de panela: texto y elementos de contraste.
   static const Color cafe = Color(0xFF2B1613);

@@ -1,0 +1,39 @@
+name: Frontend Flutter CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.6'
+          channel: stable
+          cache: true
+
+      - name: Instalar dependencias
+        run: flutter pub get
+
+      - name: Verificar formato Dart
+        run: >-
+          dart format --output=none --set-exit-if-changed
+          test lib/theme/app_colors.dart lib/ui/pantallas/inicio_pantalla.dart
+
+      - name: Analizar Dart
+        run: flutter analyze
+
+      - name: Ejecutar pruebas
+        run: flutter test
+
+      - name: Verificar compilacion web
+        run: flutter build web --release
